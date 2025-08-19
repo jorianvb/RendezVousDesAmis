@@ -1,15 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function LoginScreen() {
@@ -24,7 +24,7 @@ export default function LoginScreen() {
     }
 
     setIsLoading(true);
-    
+
     // Simuler une connexion
     setTimeout(() => {
       setIsLoading(false);
@@ -40,12 +40,12 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
       >
         <View style={styles.content}>
-          
+
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Bienvenue</Text>
@@ -79,14 +79,14 @@ export default function LoginScreen() {
               />
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.forgotButton}
               onPress={handleForgotPassword}
             >
               <Text style={styles.forgotText}>Mot de passe oublié ?</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
               onPress={handleLogin}
               disabled={isLoading}

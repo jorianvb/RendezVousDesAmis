@@ -1,21 +1,23 @@
+import { ErrorLoginProps, getError } from '@/model/login/ErrorLoginProps';
+import { formLoginProps, getErrorFieldName } from '@/model/login/FormLoginProps';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function signIn() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<formLoginProps>({
     firstName: '',
     lastName: '',
     email: '',
@@ -25,7 +27,14 @@ export default function signIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<ErrorLoginProps>({
+    firstNameError: '',
+    lastNameError: '',
+    usernameError: '',
+    emailError: '',
+    passwordError: '',
+    confirmPasswordError: ''
+  });
 
   // Validation email
   const validateEmail = (email: string) => {
@@ -40,46 +49,57 @@ export default function signIn() {
 
   // Validation du formulaire
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: ErrorLoginProps = {
+      firstNameError: '',
+      lastNameError: '',
+      usernameError: '',
+      emailError: '',
+      passwordError: '',
+      confirmPasswordError: '',
+    };
+
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Le prénom est requis';
+      newErrors.firstNameError = 'Le prénom est requis';
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Le nom est requis';
+      newErrors.lastNameError = 'Le nom est requis';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'L\'email est requis';
+      newErrors.emailError = "L'email est requis";
     } else if (!validateEmail(formData.email)) {
-      newErrors.email = 'Format d\'email invalide';
+      newErrors.emailError = "Format d'email invalide";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Le mot de passe est requis';
+      newErrors.passwordError = 'Le mot de passe est requis';
     } else if (!validatePassword(formData.password)) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+      newErrors.passwordError = 'Le mot de passe doit contenir au moins 6 caractères';
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Confirmez votre mot de passe';
+      newErrors.confirmPasswordError = 'Confirmez votre mot de passe';
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
+      newErrors.confirmPasswordError = 'Les mots de passe ne correspondent pas';
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  setErrors(newErrors);
+  // Retourne true si aucune erreur n'est présente
+  return Object.values(newErrors).every((err) => !err);
   };
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Effacer l'erreur quand l'utilisateur commence à taper
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: null }));
-    }
-  };
+const handleInputChange = (field: keyof formLoginProps, value: string) => {
+  setFormData(prev => ({ ...prev, [field]: value }));
+  
+  // Effacer l'erreur quand l'utilisateur commence à taper
+  // Il faut mapper les champs du formulaire vers les champs d'erreur
+  const errorField = getErrorFieldName(field);
+  if (errorField && getError(errorField, errors)) {
+    setErrors(prev => ({ ...prev, [errorField]: '' }));
+  }
+};
 
   const handleSignUp = async () => {
     if (!validateForm()) {
@@ -145,37 +165,37 @@ export default function signIn() {
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Prénom *</Text>
                 <TextInput
-                  style={[styles.input, errors.firstName && styles.inputError]}
+                  style={[styles.input, errors.firstNameError && styles.inputError]}
                   placeholder="Entrez votre prénom"
                   value={formData.firstName}
                   onChangeText={(value) => handleInputChange('firstName', value)}
                   autoCapitalize="words"
                 />
-                {errors.firstName && (
-                  <Text style={styles.errorText}>{errors.firstName}</Text>
-                )}
+                {errors.firstNameError ? (
+                  <Text style={styles.errorText}>{errors.firstNameError}</Text>
+                ) : null}
               </View>
 
               {/* Nom */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Nom *</Text>
                 <TextInput
-                  style={[styles.input, errors.lastName && styles.inputError]}
+                  style={[styles.input, errors.lastNameError && styles.inputError]}
                   placeholder="Entrez votre nom"
                   value={formData.lastName}
                   onChangeText={(value) => handleInputChange('lastName', value)}
                   autoCapitalize="words"
                 />
-                {errors.lastName && (
-                  <Text style={styles.errorText}>{errors.lastName}</Text>
-                )}
+                {errors.lastNameError ? (
+                  <Text style={styles.errorText}>{errors.lastNameError}</Text>
+                ) : null}
               </View>
 
               {/* Email */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email *</Text>
                 <TextInput
-                  style={[styles.input, errors.email && styles.inputError]}
+                  style={[styles.input, errors.emailError && styles.inputError]}
                   placeholder="votre@email.com"
                   value={formData.email}
                   onChangeText={(value) => handleInputChange('email', value.toLowerCase())}
@@ -183,9 +203,9 @@ export default function signIn() {
                   autoCapitalize="none"
                   autoComplete="email"
                 />
-                {errors.email && (
-                  <Text style={styles.errorText}>{errors.email}</Text>
-                )}
+                {errors.emailError ? (
+                  <Text style={styles.errorText}>{errors.emailError}</Text>
+                ) : null}
               </View>
 
               {/* Mot de passe */}
@@ -195,7 +215,7 @@ export default function signIn() {
                   <TextInput
                     style={[
                       styles.passwordInput, 
-                      errors.password && styles.inputError
+                      errors.passwordError && styles.inputError
                     ]}
                     placeholder="Minimum 6 caractères"
                     value={formData.password}
@@ -214,9 +234,9 @@ export default function signIn() {
                     />
                   </TouchableOpacity>
                 </View>
-                {errors.password && (
-                  <Text style={styles.errorText}>{errors.password}</Text>
-                )}
+                {errors.passwordError ? (
+                  <Text style={styles.errorText}>{errors.passwordError}</Text>
+                ) : null}
               </View>
 
               {/* Confirmation mot de passe */}
@@ -226,7 +246,7 @@ export default function signIn() {
                   <TextInput
                     style={[
                       styles.passwordInput, 
-                      errors.confirmPassword && styles.inputError
+                      errors.confirmPasswordError && styles.inputError
                     ]}
                     placeholder="Confirmez votre mot de passe"
                     value={formData.confirmPassword}
@@ -245,9 +265,9 @@ export default function signIn() {
                     />
                   </TouchableOpacity>
                 </View>
-                {errors.confirmPassword && (
-                  <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-                )}
+                {errors.confirmPasswordError ? (
+                  <Text style={styles.errorText}>{errors.confirmPasswordError}</Text>
+                ) : null}
               </View>
 
               {/* Bouton de création */}
