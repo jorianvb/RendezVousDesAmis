@@ -1,7 +1,9 @@
+import { auth } from '@/config/firebaseConfig';
 import { ErrorLoginProps, getError } from '@/model/login/ErrorLoginProps';
 import { formLoginProps, getErrorFieldName } from '@/model/login/FormLoginProps';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -85,21 +87,21 @@ export default function signIn() {
       newErrors.confirmPasswordError = 'Les mots de passe ne correspondent pas';
     }
 
-  setErrors(newErrors);
-  // Retourne true si aucune erreur n'est présente
-  return Object.values(newErrors).every((err) => !err);
+    setErrors(newErrors);
+    // Retourne true si aucune erreur n'est présente
+    return Object.values(newErrors).every((err) => !err);
   };
 
-const handleInputChange = (field: keyof formLoginProps, value: string) => {
-  setFormData(prev => ({ ...prev, [field]: value }));
-  
-  // Effacer l'erreur quand l'utilisateur commence à taper
-  // Il faut mapper les champs du formulaire vers les champs d'erreur
-  const errorField = getErrorFieldName(field);
-  if (errorField && getError(errorField, errors)) {
-    setErrors(prev => ({ ...prev, [errorField]: '' }));
-  }
-};
+  const handleInputChange = (field: keyof formLoginProps, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+
+    // Effacer l'erreur quand l'utilisateur commence à taper
+    // Il faut mapper les champs du formulaire vers les champs d'erreur
+    const errorField = getErrorFieldName(field);
+    if (errorField && getError(errorField, errors)) {
+      setErrors(prev => ({ ...prev, [errorField]: '' }));
+    }
+  };
 
   const handleSignUp = async () => {
     if (!validateForm()) {
@@ -108,33 +110,19 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
 
     setIsLoading(true);
 
-    try {
-      // Simuler la création de compte
-      setTimeout(() => {
-        console.log('Création de compte:', formData);
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        // Signed up 
+        const user = userCredential.user;
+        console.log('Utilisateur créé avec succès:', user);
         setIsLoading(false);
-        Alert.alert(
-          'Succès', 
-          'Votre compte a été créé avec succès !',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                // Navigation vers la page de connexion ou accueil
-                // navigation.navigate('Login') ou navigation.navigate('Home')
-              }
-            }
-          ]
-        );
-      }, 2000);
-
-      // Remplacez par votre logique d'authentification
-      // await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      
-    } catch (error) {
-      setIsLoading(false);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la création du compte');
-    }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error('Erreur lors de la création de l\'utilisateur:', errorCode, errorMessage);
+        setIsLoading(false);
+      });
   };
 
   const navigateToLogin = () => {
@@ -145,13 +133,13 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
       >
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           <View style={styles.content}>
-            
+
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.title}>Créer un compte</Text>
@@ -160,7 +148,7 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
 
             {/* Form */}
             <View style={styles.form}>
-              
+
               {/* Prénom */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Prénom *</Text>
@@ -214,7 +202,7 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={[
-                      styles.passwordInput, 
+                      styles.passwordInput,
                       errors.passwordError && styles.inputError
                     ]}
                     placeholder="Minimum 6 caractères"
@@ -223,14 +211,14 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
                   />
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.eyeButton}
                     onPress={() => setShowPassword(!showPassword)}
                   >
-                    <Ionicons 
-                      name={showPassword ? "eye-off" : "eye"} 
-                      size={20} 
-                      color="#666" 
+                    <Ionicons
+                      name={showPassword ? "eye-off" : "eye"}
+                      size={20}
+                      color="#666"
                     />
                   </TouchableOpacity>
                 </View>
@@ -245,7 +233,7 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={[
-                      styles.passwordInput, 
+                      styles.passwordInput,
                       errors.confirmPasswordError && styles.inputError
                     ]}
                     placeholder="Confirmez votre mot de passe"
@@ -254,14 +242,14 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
                     secureTextEntry={!showConfirmPassword}
                     autoCapitalize="none"
                   />
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     style={styles.eyeButton}
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    <Ionicons 
-                      name={showConfirmPassword ? "eye-off" : "eye"} 
-                      size={20} 
-                      color="#666" 
+                    <Ionicons
+                      name={showConfirmPassword ? "eye-off" : "eye"}
+                      size={20}
+                      color="#666"
                     />
                   </TouchableOpacity>
                 </View>
@@ -271,7 +259,7 @@ const handleInputChange = (field: keyof formLoginProps, value: string) => {
               </View>
 
               {/* Bouton de création */}
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[
                   styles.signUpButton,
                   isLoading && styles.signUpButtonDisabled
