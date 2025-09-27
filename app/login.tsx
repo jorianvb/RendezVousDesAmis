@@ -117,60 +117,23 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#f8f9fa',
-  },
-  keyboardView: {
     flex: 1,
   },
   content: {
     flex: 1,
+    justifyContent: 'center',
     paddingHorizontal: 24,
+  },
+  footer: {
+    alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
-  header: {
-    alignItems: 'center',
-    marginBottom: 48,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
+  footerText: {
     color: '#666',
-    textAlign: 'center',
-  },
-  form: {
-    marginBottom: 32,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#e1e5e9',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    fontSize: 14,
+    marginRight: 4,
   },
   forgotButton: {
     alignSelf: 'flex-end',
@@ -181,11 +144,48 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
+  form: {
+    marginBottom: 32,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 48,
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderColor: '#e1e5e9',
+    borderRadius: 12,
+    borderWidth: 1,
+    elevation: 1,
+    fontSize: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  label: {
+    color: '#333',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
   loginButton: {
+    alignItems: 'center',
     backgroundColor: '#007AFF',
     borderRadius: 12,
+    elevation: 4,
     paddingVertical: 16,
-    alignItems: 'center',
     shadowColor: '#007AFF',
     shadowOffset: {
       width: 0,
@@ -193,31 +193,31 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 4,
   },
   loginButtonDisabled: {
     backgroundColor: '#ccc',
-    shadowOpacity: 0,
     elevation: 0,
+    shadowOpacity: 0,
   },
   loginButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  footerText: {
-    color: '#666',
-    fontSize: 14,
-    marginRight: 4,
-  },
   signupText: {
     color: '#007AFF',
     fontSize: 14,
     fontWeight: '600',
+  },
+  subtitle: {
+    color: '#666',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  title: {
+    color: '#1a1a1a',
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
 });

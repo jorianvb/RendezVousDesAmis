@@ -1,10 +1,10 @@
 export interface ErrorLoginProps {
-    firstNameError: string;
-    lastNameError: string;
-    usernameError: string;
-    emailError: string;
-    passwordError: string;
-    confirmPasswordError: string;
+  firstNameError: string;
+  lastNameError: string;
+  usernameError: string;
+  emailError: string;
+  passwordError: string;
+  confirmPasswordError: string;
 }
 
 export function getError(
