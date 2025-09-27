@@ -9,7 +9,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
 export default function LoginScreen() {
@@ -34,7 +34,10 @@ export default function LoginScreen() {
   };
 
   const handleForgotPassword = () => {
-    Alert.alert('Mot de passe oublié', 'Un lien de réinitialisation sera envoyé');
+    Alert.alert(
+      'Mot de passe oublié',
+      'Un lien de réinitialisation sera envoyé'
+    );
   };
 
   return (
@@ -45,7 +48,6 @@ export default function LoginScreen() {
         style={styles.keyboardView}
       >
         <View style={styles.content}>
-
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Bienvenue</Text>
@@ -87,7 +89,10 @@ export default function LoginScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+              style={[
+                styles.loginButton,
+                isLoading && styles.loginButtonDisabled,
+              ]}
               onPress={handleLogin}
               disabled={isLoading}
             >
@@ -101,10 +106,9 @@ export default function LoginScreen() {
           <View style={styles.footer}>
             <Text style={styles.footerText}>Pas encore de compte ?</Text>
             <TouchableOpacity>
-              <Text style={styles.signupText}>S'inscrire</Text>
+              <Text style={styles.signupText}>S&apos;inscrire</Text>
             </TouchableOpacity>
           </View>
-
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

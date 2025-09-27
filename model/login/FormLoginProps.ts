@@ -1,21 +1,23 @@
-import { ErrorLoginProps } from "./ErrorLoginProps";
+import { ErrorLoginProps } from './ErrorLoginProps';
 
-export interface formLoginProps {
-    firstName: string,
-    lastName: string,
-    email: string,
-    password: string,
-    confirmPassword: string
+export interface FormLoginProps {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 // Fonction helper pour mapper les champs
-export function getErrorFieldName(field: keyof formLoginProps): keyof ErrorLoginProps | null {
-  const mapping: Record<keyof formLoginProps, keyof ErrorLoginProps> = {
+export function getErrorFieldName(
+  field: keyof FormLoginProps
+): keyof ErrorLoginProps | null {
+  const mapping: Record<keyof FormLoginProps, keyof ErrorLoginProps> = {
     firstName: 'firstNameError',
     lastName: 'lastNameError',
     email: 'emailError',
     password: 'passwordError',
-    confirmPassword: 'confirmPasswordError'
+    confirmPassword: 'confirmPasswordError',
   };
   return mapping[field] || null;
-};
+}

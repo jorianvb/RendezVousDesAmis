@@ -1,6 +1,9 @@
 import { auth } from '@/config/firebaseConfig';
 import { ErrorLoginProps, getError } from '@/model/login/ErrorLoginProps';
-import { formLoginProps, getErrorFieldName } from '@/model/login/FormLoginProps';
+import {
+  FormLoginProps,
+  getErrorFieldName,
+} from '@/model/login/FormLoginProps';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -15,16 +18,16 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 
-export default function signIn() {
-  const [formData, setFormData] = useState<formLoginProps>({
+export default function SignIn() {
+  const [formData, setFormData] = useState<FormLoginProps>({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -35,7 +38,7 @@ export default function signIn() {
     usernameError: '',
     emailError: '',
     passwordError: '',
-    confirmPasswordError: ''
+    confirmPasswordError: '',
   });
 
   // Validation email
@@ -60,7 +63,6 @@ export default function signIn() {
       confirmPasswordError: '',
     };
 
-
     if (!formData.firstName.trim()) {
       newErrors.firstNameError = 'Le prénom est requis';
     }
@@ -78,7 +80,8 @@ export default function signIn() {
     if (!formData.password) {
       newErrors.passwordError = 'Le mot de passe est requis';
     } else if (!validatePassword(formData.password)) {
-      newErrors.passwordError = 'Le mot de passe doit contenir au moins 6 caractères';
+      newErrors.passwordError =
+        'Le mot de passe doit contenir au moins 6 caractères';
     }
 
     if (!formData.confirmPassword) {
@@ -89,10 +92,10 @@ export default function signIn() {
 
     setErrors(newErrors);
     // Retourne true si aucune erreur n'est présente
-    return Object.values(newErrors).every((err) => !err);
+    return Object.values(newErrors).every(err => !err);
   };
 
-  const handleInputChange = (field: keyof formLoginProps, value: string) => {
+  const handleInputChange = (field: keyof FormLoginProps, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
 
     // Effacer l'erreur quand l'utilisateur commence à taper
@@ -111,16 +114,20 @@ export default function signIn() {
     setIsLoading(true);
 
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
-      .then((userCredential) => {
-        // Signed up 
+      .then(userCredential => {
+        // Signed up
         const user = userCredential.user;
         console.log('Utilisateur créé avec succès:', user);
         setIsLoading(false);
       })
-      .catch((error) => {
+      .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.error('Erreur lors de la création de l\'utilisateur:', errorCode, errorMessage);
+        console.error(
+          "Erreur lors de la création de l'utilisateur:",
+          errorCode,
+          errorMessage
+        );
         setIsLoading(false);
       });
   };
@@ -137,26 +144,32 @@ export default function signIn() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
       >
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.content}>
-
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.title}>Créer un compte</Text>
-              <Text style={styles.subtitle}>Rejoignez-nous dès aujourd'hui</Text>
+              <Text style={styles.subtitle}>
+                Rejoignez-nous dès aujourd&apos;hui
+              </Text>
             </View>
 
             {/* Form */}
             <View style={styles.form}>
-
               {/* Prénom */}
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Prénom *</Text>
                 <TextInput
-                  style={[styles.input, errors.firstNameError && styles.inputError]}
+                  style={[
+                    styles.input,
+                    errors.firstNameError && styles.inputError,
+                  ]}
                   placeholder="Entrez votre prénom"
                   value={formData.firstName}
-                  onChangeText={(value) => handleInputChange('firstName', value)}
+                  onChangeText={value => handleInputChange('firstName', value)}
                   autoCapitalize="words"
                 />
                 {errors.firstNameError ? (
@@ -168,10 +181,13 @@ export default function signIn() {
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>Nom *</Text>
                 <TextInput
-                  style={[styles.input, errors.lastNameError && styles.inputError]}
+                  style={[
+                    styles.input,
+                    errors.lastNameError && styles.inputError,
+                  ]}
                   placeholder="Entrez votre nom"
                   value={formData.lastName}
-                  onChangeText={(value) => handleInputChange('lastName', value)}
+                  onChangeText={value => handleInputChange('lastName', value)}
                   autoCapitalize="words"
                 />
                 {errors.lastNameError ? (
@@ -186,7 +202,9 @@ export default function signIn() {
                   style={[styles.input, errors.emailError && styles.inputError]}
                   placeholder="votre@email.com"
                   value={formData.email}
-                  onChangeText={(value) => handleInputChange('email', value.toLowerCase())}
+                  onChangeText={value =>
+                    handleInputChange('email', value.toLowerCase())
+                  }
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoComplete="email"
@@ -203,11 +221,11 @@ export default function signIn() {
                   <TextInput
                     style={[
                       styles.passwordInput,
-                      errors.passwordError && styles.inputError
+                      errors.passwordError && styles.inputError,
                     ]}
                     placeholder="Minimum 6 caractères"
                     value={formData.password}
-                    onChangeText={(value) => handleInputChange('password', value)}
+                    onChangeText={value => handleInputChange('password', value)}
                     secureTextEntry={!showPassword}
                     autoCapitalize="none"
                   />
@@ -216,7 +234,7 @@ export default function signIn() {
                     onPress={() => setShowPassword(!showPassword)}
                   >
                     <Ionicons
-                      name={showPassword ? "eye-off" : "eye"}
+                      name={showPassword ? 'eye-off' : 'eye'}
                       size={20}
                       color="#666"
                     />
@@ -234,11 +252,13 @@ export default function signIn() {
                   <TextInput
                     style={[
                       styles.passwordInput,
-                      errors.confirmPasswordError && styles.inputError
+                      errors.confirmPasswordError && styles.inputError,
                     ]}
                     placeholder="Confirmez votre mot de passe"
                     value={formData.confirmPassword}
-                    onChangeText={(value) => handleInputChange('confirmPassword', value)}
+                    onChangeText={value =>
+                      handleInputChange('confirmPassword', value)
+                    }
                     secureTextEntry={!showConfirmPassword}
                     autoCapitalize="none"
                   />
@@ -247,14 +267,16 @@ export default function signIn() {
                     onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     <Ionicons
-                      name={showConfirmPassword ? "eye-off" : "eye"}
+                      name={showConfirmPassword ? 'eye-off' : 'eye'}
                       size={20}
                       color="#666"
                     />
                   </TouchableOpacity>
                 </View>
                 {errors.confirmPasswordError ? (
-                  <Text style={styles.errorText}>{errors.confirmPasswordError}</Text>
+                  <Text style={styles.errorText}>
+                    {errors.confirmPasswordError}
+                  </Text>
                 ) : null}
               </View>
 
@@ -262,7 +284,7 @@ export default function signIn() {
               <TouchableOpacity
                 style={[
                   styles.signUpButton,
-                  isLoading && styles.signUpButtonDisabled
+                  isLoading && styles.signUpButtonDisabled,
                 ]}
                 onPress={handleSignUp}
                 disabled={isLoading}
@@ -271,7 +293,6 @@ export default function signIn() {
                   {isLoading ? 'Création en cours...' : 'Créer mon compte'}
                 </Text>
               </TouchableOpacity>
-
             </View>
 
             {/* Footer */}
@@ -281,7 +302,6 @@ export default function signIn() {
                 <Text style={styles.loginText}>Se connecter</Text>
               </TouchableOpacity>
             </View>
-
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
