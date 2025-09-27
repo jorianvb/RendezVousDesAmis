@@ -10,7 +10,8 @@ module.exports = defineConfig([
       '.expo/',
       'dist/',
       'build/',
-      '*.config.js'
+      '*.config.js',
+      'app-example/*'
     ],
   },
 ]);
